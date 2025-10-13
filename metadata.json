@@ -1,0 +1,5 @@
+{
+  "name": "Airline Baggage Selection",
+  "description": "A web interface for an airline where passengers can add baggage and additional services to their booking, designed to replicate a modern flight booking experience.",
+  "requestFramePermissions": []
+}

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Airline Baggage Selection</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* Custom primary color overrides */
+      .bg-purple-600, .peer:checked ~ .peer-checked\\:bg-purple-600 {
+        background-color: #78028A !important;
+      }
+      .hover\\:bg-purple-700:hover {
+        background-color: #630270 !important;
+      }
+      .text-purple-600, .text-purple-700, input[type='checkbox'].text-purple-600 {
+        color: #78028A !important;
+      }
+      .hover\\:text-purple-700:hover {
+        color: #630270 !important;
+      }
+      .border-purple-600 {
+        border-color: #78028A !important;
+      }
+      .focus\\:ring-purple-500:focus {
+        --tw-ring-color: #b36ec1 !important;
+      }
+      .border-purple-300, .hover\\:border-purple-300:hover {
+        border-color: #d7ade1 !important;
+      }
+      .peer:focus ~ .peer-focus\\:ring-purple-300, .focus\\:ring-purple-300:focus {
+        --tw-ring-color: #d7ade1 !important;
+      }
+      .border-purple-200 {
+        border-color: #e8d1eb !important;
+      }
+      .ring-purple-200 {
+        --tw-ring-color: #e8d1eb !important;
+      }
+      .hover\\:bg-purple-50:hover {
+        background-color: #fbf5fc !important;
+      }
+
+      /* Custom scrollbar for better aesthetics */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f1f5f9;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 10px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/"
+  }
+}
+</script>
+</head>
+  <body class="bg-slate-50">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
