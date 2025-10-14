@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Header } from './components/Header';
 import { BaggageOptionCard } from './components/BaggageOptionCard';
+import { PurchaseDetailDrawer } from './components/PurchaseDetailDrawer';
 import { baggageOptions, passengersData } from './constants';
 import { Passenger } from './types';
 
@@ -8,6 +9,7 @@ const App: React.FC = () => {
   const [passengers, setPassengers] = useState<Passenger[]>(passengersData);
   const [sameItemsForAll, setSameItemsForAll] = useState<{ [key: string]: boolean }>({});
   const [separateTrips, setSeparateTrips] = useState<{ [key: string]: boolean }>({});
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const handleSeparateTripsToggle = (itemId: string, checked: boolean) => {
     setSeparateTrips(prev => ({ ...prev, [itemId]: checked }));
@@ -71,7 +73,7 @@ const App: React.FC = () => {
     return `CLP ${value.toLocaleString('es-CL')}`;
   };
 
-  const total = useMemo(() => {
+  const baggageTotal = useMemo(() => {
     return passengers.reduce((acc, passenger) => {
       let passengerTotal = 0;
       for (const itemId in passenger.baggage) {
@@ -84,6 +86,9 @@ const App: React.FC = () => {
       return acc + passengerTotal;
     }, 0);
   }, [passengers]);
+
+  const baseFlightCost = 243334;
+  const grandTotal = baseFlightCost + baggageTotal;
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800 font-sans">
@@ -147,19 +152,27 @@ const App: React.FC = () => {
       
       <footer className="sticky bottom-0 bg-white shadow-[0_-4px_12px_rgba(0,0,0,0.05)] p-4">
         <div className="w-full max-w-6xl mx-auto flex flex-col md:flex-row md:justify-between md:items-center gap-2 md:gap-0">
-            <div className="text-right md:text-left">
+            <button onClick={() => setIsDrawerOpen(true)} className="text-right md:text-left focus:outline-none focus:ring-2 focus:ring-purple-300 rounded-lg p-2 -m-2 transition-shadow" aria-label="Ver detalle de la compra">
                 <span className="text-sm text-gray-600">Precio total</span>
-                <p className="text-2xl font-bold text-gray-900 flex items-center justify-end md:justify-start">{formatCurrency(total)}
+                <p className="text-2xl font-bold text-gray-900 flex items-center justify-end md:justify-start">{formatCurrency(grandTotal)}
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2 text-purple-600" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clipRule="evenodd" />
                   </svg>
                 </p>
-            </div>
+            </button>
             <button className="w-full md:w-auto bg-purple-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-purple-700 transition-colors text-lg">
                 Continuar y completar datos
             </button>
         </div>
       </footer>
+
+      <PurchaseDetailDrawer 
+        isOpen={isDrawerOpen} 
+        onClose={() => setIsDrawerOpen(false)}
+        passengers={passengers}
+        baggageOptions={baggageOptions}
+        grandTotal={grandTotal}
+      />
     </div>
   );
 };
