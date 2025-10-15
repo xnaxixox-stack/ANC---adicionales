@@ -1,5 +1,7 @@
 import React from 'react';
 import { Passenger } from '../types';
+// 1. IMPORTACIÓN: Importamos el cargador de scripts
+import MazeScriptLoader from '../MazeScriptLoader'; 
 
 interface PassengerDataFormProps {
   passengers: Passenger[];
@@ -43,13 +45,17 @@ export const PassengerDataForm: React.FC<PassengerDataFormProps> = ({ passengers
 
   const formatCurrency = (value: number) => `CLP ${value.toLocaleString('es-CL')}`;
 
+  // Nota: Deberías reemplazar 'alert' por un componente modal en producción.
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    alert('Datos de pasajeros confirmados. Procediendo al pago.');
+    console.log('Datos de pasajeros confirmados. Procediendo al pago.');
   };
 
   return (
     <>
+      {/* 2. RENDERING: Colocamos el componente aquí. Se carga al mostrar la página. */}
+      <MazeScriptLoader /> 
+
       <main className="w-full max-w-[1312px] mx-auto px-4 md:px-8 py-8 mb-32">
         <button onClick={onBack} className="flex items-center text-purple-700 font-semibold mb-6 hover:underline">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
@@ -114,3 +120,5 @@ export const PassengerDataForm: React.FC<PassengerDataFormProps> = ({ passengers
     </>
   );
 };
+
+export default PassengerDataForm;
