@@ -2,14 +2,27 @@ import React, { useState, useMemo } from 'react';
 import { Header } from './components/Header';
 import { BaggageOptionCard } from './components/BaggageOptionCard';
 import { PurchaseDetailDrawer } from './components/PurchaseDetailDrawer';
+import { BaggageDetailDrawer } from './components/BaggageDetailDrawer';
 import { baggageOptions, passengersData } from './constants';
 import { Passenger } from './types';
+import { ToastContainer, ToastData } from './components/ToastContainer';
 
 const App: React.FC = () => {
   const [passengers, setPassengers] = useState<Passenger[]>(passengersData);
   const [sameItemsForAll, setSameItemsForAll] = useState<{ [key: string]: boolean }>({});
   const [separateTrips, setSeparateTrips] = useState<{ [key: string]: boolean }>({});
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isPurchaseDrawerOpen, setIsPurchaseDrawerOpen] = useState(false);
+  const [activeBaggageDetail, setActiveBaggageDetail] = useState<string | null>(null);
+  const [toasts, setToasts] = useState<ToastData[]>([]);
+
+  const addToast = (message: string, type: 'success' | 'info' = 'info') => {
+    const id = Date.now();
+    setToasts(prevToasts => [...prevToasts, { id, message, type }]);
+  };
+
+  const removeToast = (id: number) => {
+    setToasts(prevToasts => prevToasts.filter(toast => toast.id !== id));
+  };
 
   const handleSeparateTripsToggle = (itemId: string, checked: boolean) => {
     setSeparateTrips(prev => ({ ...prev, [itemId]: checked }));
@@ -26,7 +39,6 @@ const App: React.FC = () => {
       const item = baggageOptions.find(opt => opt.id === itemId);
       if (!item) return prevPassengers;
 
-      // Default to true if not set. Pets are always handled individually.
       const applyToAll = item.category !== 'pet' && (sameItemsForAll[itemId] !== false);
 
       const applyChange = (passenger: Passenger) => {
@@ -40,7 +52,6 @@ const App: React.FC = () => {
           newBaggage[itemId] = { ida: newCount, vuelta: newCount };
         }
         
-        // Remove baggage item if counts are zero to collapse the card
         if (newBaggage[itemId].ida === 0 && newBaggage[itemId].vuelta === 0) {
           delete newBaggage[itemId];
         }
@@ -119,7 +130,9 @@ const App: React.FC = () => {
                 </div>
                 <p className="text-gray-600 mb-2">Todas nuestras tarifas incluyen <span className="font-bold">un bolso</span> de mano sin costo <span className="font-bold">por pasajero</span> en cada vuelo.</p>
                 <p className="text-gray-700 font-semibold">Tienes en tu reserva: <span className="text-purple-700">1 Ida | 1 Vuelta</span></p>
-                <button className="mt-4 w-full md:w-auto text-purple-700 font-semibold py-2 px-4 border border-purple-300 rounded-lg hover:bg-purple-50 transition-colors">
+                <button 
+                  onClick={() => setActiveBaggageDetail('hand-bag')}
+                  className="mt-4 w-full md:w-auto text-purple-700 font-semibold py-2 px-4 border border-purple-300 rounded-lg hover:bg-purple-50 transition-colors">
                   Detalle bolso de mano
                 </button>
               </div>
@@ -138,6 +151,8 @@ const App: React.FC = () => {
                    separateTrips={separateTrips[item.id] || false}
                    onSeparateTripsChange={(checked) => handleSeparateTripsToggle(item.id, checked)}
                    onCancel={() => handleResetItem(item.id)}
+                   onDetailClick={() => setActiveBaggageDetail(item.id)}
+                   addToast={addToast}
                  />
               ))}
             </div>
@@ -152,7 +167,7 @@ const App: React.FC = () => {
       
       <footer className="sticky bottom-0 bg-white shadow-[0_-4px_12px_rgba(0,0,0,0.05)] p-4">
         <div className="w-full max-w-6xl mx-auto flex flex-col md:flex-row md:justify-between md:items-center gap-2 md:gap-0">
-            <button onClick={() => setIsDrawerOpen(true)} className="text-right md:text-left focus:outline-none focus:ring-2 focus:ring-purple-300 rounded-lg p-2 -m-2 transition-shadow" aria-label="Ver detalle de la compra">
+            <button onClick={() => setIsPurchaseDrawerOpen(true)} className="text-right md:text-left focus:outline-none focus:ring-2 focus:ring-purple-300 rounded-lg p-2 -m-2 transition-shadow" aria-label="Ver detalle de la compra">
                 <span className="text-sm text-gray-600">Precio total</span>
                 <p className="text-2xl font-bold text-gray-900 flex items-center justify-end md:justify-start">{formatCurrency(grandTotal)}
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2 text-purple-600" viewBox="0 0 20 20" fill="currentColor">
@@ -167,11 +182,19 @@ const App: React.FC = () => {
       </footer>
 
       <PurchaseDetailDrawer 
-        isOpen={isDrawerOpen} 
-        onClose={() => setIsDrawerOpen(false)}
+        isOpen={isPurchaseDrawerOpen} 
+        onClose={() => setIsPurchaseDrawerOpen(false)}
         passengers={passengers}
         baggageOptions={baggageOptions}
         grandTotal={grandTotal}
+      />
+
+      <ToastContainer toasts={toasts} onDismiss={removeToast} />
+
+      <BaggageDetailDrawer
+        isOpen={activeBaggageDetail !== null}
+        onClose={() => setActiveBaggageDetail(null)}
+        baggageItemId={activeBaggageDetail}
       />
     </div>
   );

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { BaggageItem, Passenger } from '../types';
+import { BAGGAGE_ITEM_LIMITS } from '../constants';
 import { Switch } from './Switch';
 
 interface BaggageOptionCardProps {
@@ -11,6 +12,8 @@ interface BaggageOptionCardProps {
   separateTrips: boolean;
   onSeparateTripsChange: (checked: boolean) => void;
   onCancel: () => void;
+  onDetailClick: () => void;
+  addToast: (message: string, type: 'success' | 'info') => void;
 }
 
 const QuantityControlButton: React.FC<{ onClick: () => void; children: React.ReactNode; disabled?: boolean }> = ({ onClick, children, disabled }) => (
@@ -25,8 +28,10 @@ const QuantityControlButton: React.FC<{ onClick: () => void; children: React.Rea
 );
 
 
-export const BaggageOptionCard: React.FC<BaggageOptionCardProps> = ({ item, passengers, onQuantityChange, isSameForAll, onSameForAllChange, separateTrips, onSeparateTripsChange, onCancel }) => {
+export const BaggageOptionCard: React.FC<BaggageOptionCardProps> = ({ item, passengers, onQuantityChange, isSameForAll, onSameForAllChange, separateTrips, onSeparateTripsChange, onCancel, onDetailClick, addToast }) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [countBeforeEditing, setCountBeforeEditing] = useState(0);
   const cardRef = useRef<HTMLDivElement>(null);
 
   const totalIda = passengers.reduce((sum, p) => sum + (p.baggage[item.id]?.ida || 0), 0);
@@ -50,16 +55,37 @@ export const BaggageOptionCard: React.FC<BaggageOptionCardProps> = ({ item, pass
     }
   }, [isEditing]);
 
+  const prevIsEditingRef = useRef(isEditing);
+  useEffect(() => {
+    if (prevIsEditingRef.current && !isEditing) {
+      // Animate when transitioning from editing to not-editing
+      setIsAnimating(true);
+      const timer = setTimeout(() => setIsAnimating(false), 500); // Corresponds to animation duration
+      return () => clearTimeout(timer);
+    }
+    prevIsEditingRef.current = isEditing;
+  }, [isEditing]);
+
   const handleInitialAdd = () => {
+    setCountBeforeEditing(0);
     onQuantityChange(item.id, passengers[0].id, 'ida', 1);
     setIsEditing(true);
   };
 
   const handleModify = () => {
+    setCountBeforeEditing(totalCount);
     setIsEditing(true);
   };
 
   const handleConfirm = () => {
+    const diff = totalCount - countBeforeEditing;
+    if (diff !== 0) {
+      if (totalCount > 0) {
+        addToast(`Tienes ${totalCount} x ${item.name}`, 'success');
+      } else {
+        addToast(`Se eliminó ${item.name} de tu reserva`, 'info');
+      }
+    }
     setIsEditing(false);
   };
   
@@ -77,13 +103,18 @@ export const BaggageOptionCard: React.FC<BaggageOptionCardProps> = ({ item, pass
   const stopPropagation = (e: React.MouseEvent) => {
     e.stopPropagation();
   };
+  
+  const handleDetailClick = (e: React.MouseEvent) => {
+    stopPropagation(e);
+    onDetailClick();
+  };
 
   const formatCurrency = (value: number) => `CLP ${value.toLocaleString('es-CL')}`;
 
   return (
     <div 
       ref={cardRef}
-      className={`bg-white p-5 rounded-2xl shadow-sm border ${isEditing ? 'border-purple-300 ring-2 ring-purple-200' : 'border-gray-200 hover:border-purple-300 hover:shadow-lg cursor-pointer'} flex flex-col gap-4 transition-all min-h-[250px]`}
+      className={`bg-white p-5 rounded-2xl shadow-sm border ${isEditing ? 'border-purple-300 ring-2 ring-purple-200' : 'border-gray-200 hover:border-purple-300 hover:shadow-lg cursor-pointer'} flex flex-col gap-4 transition-all min-h-[250px] ${isAnimating ? 'animate-subtle-glow' : ''}`}
       onClick={handleCardClick}
       role="button"
       tabIndex={0}
@@ -96,7 +127,9 @@ export const BaggageOptionCard: React.FC<BaggageOptionCardProps> = ({ item, pass
         </div>
         <div className="flex-1 text-center sm:text-left">
           <h3 className="text-lg font-bold text-gray-900">{item.name}</h3>
-          <p className="text-sm text-purple-700 font-medium">{item.details}</p>
+          <button onClick={handleDetailClick} className="text-sm text-purple-700 font-medium hover:underline focus:outline-none focus:ring-2 focus:ring-purple-200 rounded">
+            {item.details}
+          </button>
           
           {hasItems && !isEditing && (
             <p className="text-gray-700 font-semibold my-2">
@@ -141,6 +174,7 @@ export const BaggageOptionCard: React.FC<BaggageOptionCardProps> = ({ item, pass
             {passengers.map((passenger) => {
               const idaCount = passenger.baggage[item.id]?.ida || 0;
               const vueltaCount = passenger.baggage[item.id]?.vuelta || 0;
+              const limit = BAGGAGE_ITEM_LIMITS[item.id] ?? Infinity;
               
               return (
                 <div key={passenger.id} className="flex flex-wrap justify-between items-center text-sm gap-2">
@@ -151,13 +185,13 @@ export const BaggageOptionCard: React.FC<BaggageOptionCardProps> = ({ item, pass
                         <span className="text-gray-500 w-8 text-right">Ida</span>
                         <QuantityControlButton onClick={() => onQuantityChange(item.id, passenger.id, 'ida', -1)} disabled={idaCount === 0}>-</QuantityControlButton>
                         <span className="font-bold w-4 text-center" aria-live="polite">{idaCount}</span>
-                        <QuantityControlButton onClick={() => onQuantityChange(item.id, passenger.id, 'ida', 1)}>+</QuantityControlButton>
+                        <QuantityControlButton onClick={() => onQuantityChange(item.id, passenger.id, 'ida', 1)} disabled={idaCount >= limit}>+</QuantityControlButton>
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="text-gray-500 w-8 text-right">Vuelta</span>
                         <QuantityControlButton onClick={() => onQuantityChange(item.id, passenger.id, 'vuelta', -1)} disabled={vueltaCount === 0}>-</QuantityControlButton>
                         <span className="font-bold w-4 text-center" aria-live="polite">{vueltaCount}</span>
-                        <QuantityControlButton onClick={() => onQuantityChange(item.id, passenger.id, 'vuelta', 1)}>+</QuantityControlButton>
+                        <QuantityControlButton onClick={() => onQuantityChange(item.id, passenger.id, 'vuelta', 1)} disabled={vueltaCount >= limit}>+</QuantityControlButton>
                       </div>
                     </div>
                   ) : (
@@ -165,7 +199,7 @@ export const BaggageOptionCard: React.FC<BaggageOptionCardProps> = ({ item, pass
                       <span className="text-gray-500">Ida y Vuelta</span>
                       <QuantityControlButton onClick={() => onQuantityChange(item.id, passenger.id, 'ida', -1)} disabled={idaCount === 0}>-</QuantityControlButton>
                       <span className="text-xl font-bold w-6 text-center" aria-live="polite">{idaCount}</span>
-                      <QuantityControlButton onClick={() => onQuantityChange(item.id, passenger.id, 'ida', 1)}>+</QuantityControlButton>
+                      <QuantityControlButton onClick={() => onQuantityChange(item.id, passenger.id, 'ida', 1)} disabled={idaCount >= limit}>+</QuantityControlButton>
                     </div>
                   )}
                 </div>
