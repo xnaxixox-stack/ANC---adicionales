@@ -214,13 +214,23 @@ export const BaggageOptionCard: React.FC<BaggageOptionCardProps> = ({ item, pass
               })}
             </div>
 
-            <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-200 mt-2">
-              <button onClick={handleCancelAndCollapse} className="text-gray-600 font-semibold py-2 px-6 rounded-lg hover:bg-gray-100 transition-colors">
-                  Cancelar
-              </button>
-              <button onClick={handleConfirm} className="bg-purple-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-purple-700 transition-colors">
-                  Confirmar ({totalCount})
-              </button>
+            <div className="flex items-center justify-between gap-3 pt-4 border-t border-gray-200 mt-2">
+              <div>
+                {hasItems && (
+                  <div>
+                    <span className="text-sm font-medium text-gray-600">Subtotal del ítem</span>
+                    <p className="font-bold text-lg text-purple-700">{formatCurrency(totalCount * item.price)}</p>
+                  </div>
+                )}
+              </div>
+              <div className="flex items-center gap-3">
+                <button onClick={handleCancelAndCollapse} className="text-gray-600 font-semibold py-2 px-6 rounded-lg hover:bg-gray-100 transition-colors">
+                    Cancelar
+                </button>
+                <button onClick={handleConfirm} className="bg-purple-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-purple-700 transition-colors">
+                    Confirmar ({totalCount})
+                </button>
+              </div>
             </div>
           </div>
         )}
