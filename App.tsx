@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Header } from './components/Header';
 import { BaggageOptionCard } from './components/BaggageOptionCard';
 import { PurchaseDetailDrawer } from './components/PurchaseDetailDrawer';
@@ -12,8 +12,31 @@ import { PassengerDataForm } from './components/PassengerDataForm'; // Importaci
 type AppStep = 'baggageSelection' | 'passengerData';
 
 const App: React.FC = () => {
-  // Estado para controlar qué pantalla se muestra
-  const [currentStep, setCurrentStep] = useState<AppStep>('baggageSelection');
+  
+  // Helper para obtener el paso de la URL Hash
+  const getStepFromHash = (): AppStep => {
+    const hash = window.location.hash.replace('#', '');
+    return hash === 'passenger-data' ? 'passengerData' : 'baggageSelection';
+  };
+
+  // Estado inicial basado en la URL hash o 'baggageSelection' por defecto
+  const [currentStep, setCurrentStep] = useState<AppStep>(getStepFromHash);
+
+  // useEffect para manejar la sincronización con la URL hash y el estado
+  useEffect(() => {
+    // 1. Inicializa la URL si está vacía, asegurando un punto de inicio trackeable
+    if (!window.location.hash || window.location.hash.replace('#', '') === '') {
+        window.location.hash = '#baggage-selection';
+    }
+
+    // 2. Escucha los cambios de hash (ej. al usar los botones de adelante/atrás del navegador)
+    const handleHashChange = () => {
+        setCurrentStep(getStepFromHash());
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []); // Se ejecuta solo una vez al montar
 
   const [passengers, setPassengers] = useState<Passenger[]>(() => {
     try {
@@ -132,12 +155,14 @@ const App: React.FC = () => {
     };
     // Guardamos el estado en sessionStorage antes de navegar
     sessionStorage.setItem('bookingState', JSON.stringify(bookingState));
-    setCurrentStep('passengerData'); // <--- Navegación correcta en React
+    // Actualizamos el hash de la URL para que sea trackeable
+    window.location.hash = '#passenger-data';
   };
   
   // Función para volver a la pantalla anterior
   const handleGoBack = () => {
-    setCurrentStep('baggageSelection');
+    // Actualizamos el hash de la URL para que sea trackeable
+    window.location.hash = '#baggage-selection';
   };
 
   const renderContent = () => {
