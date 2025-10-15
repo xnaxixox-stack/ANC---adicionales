@@ -214,7 +214,7 @@ const App: React.FC = () => {
         <div className="space-y-8">
             {/* Included Item */}
             <div className="bg-white p-4 rounded-xl border border-gray-200 flex items-center gap-3 shadow-sm">
-              <img src="https://i.imgur.com/injLeEc.png" alt="Hand bags" className="w-12 h-12 md:w-16 md:h-16 object-contain flex-shrink-0"/>
+              <img src="https://i.imgur.com/injLeEc.png" alt="Hand bags" className="w-16 h-16 md:w-24 md:h-24 object-contain flex-shrink-0"/>
               <div className="flex-1">
                 <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mb-1">
                   <h2 className="text-base font-bold text-gray-900">Bolso de mano</h2>
