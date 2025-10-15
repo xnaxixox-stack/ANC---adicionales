@@ -6,14 +6,13 @@ import { BaggageDetailDrawer } from './components/BaggageDetailDrawer';
 import { baggageOptions, passengersData } from './constants';
 import { Passenger } from './types';
 import { ToastContainer, ToastData } from './components/ToastContainer';
-// Importamos el componente de destino
-import { PassengerDataForm } from './components/PassengerDataForm'; 
+import { PassengerDataForm } from './components/PassengerDataForm'; // Importación crucial
 
 // Definimos los posibles pasos de navegación
 type AppStep = 'baggageSelection' | 'passengerData';
 
 const App: React.FC = () => {
-  // 1. AÑADIMOS ESTADO PARA LA NAVEGACIÓN
+  // Estado para controlar qué pantalla se muestra
   const [currentStep, setCurrentStep] = useState<AppStep>('baggageSelection');
 
   const [passengers, setPassengers] = useState<Passenger[]>(() => {
@@ -32,7 +31,8 @@ const App: React.FC = () => {
   });
 
   const [sameItemsForAll, setSameItemsForAll] = useState<{ [key: string]: boolean }>({});
-  const [separateTrips, setSeparateTrips] = useState<{ [key: string]: boolean }>({});
+  // Corregido: Se cambió '{ [keyof string]: boolean }' a '{ [key: string]: boolean }'
+  const [separateTrips, setSeparateTrips] = useState<{ [key: string]: boolean }>({}); 
   const [isPurchaseDrawerOpen, setIsPurchaseDrawerOpen] = useState(false);
   const [activeBaggageDetail, setActiveBaggageDetail] = useState<string | null>(null);
   const [toasts, setToasts] = useState<ToastData[]>([]);
@@ -124,7 +124,7 @@ const App: React.FC = () => {
   const baseFlightCost = 243334;
   const grandTotal = baseFlightCost + baggageTotal;
 
-  // 3. ACTUALIZAMOS LA NAVEGACIÓN A CAMBIO DE ESTADO
+  // Función de navegación: Cambia la vista a los datos de pasajeros
   const handleContinue = () => {
     const bookingState = {
       passengers,
@@ -132,8 +132,7 @@ const App: React.FC = () => {
     };
     // Guardamos el estado en sessionStorage antes de navegar
     sessionStorage.setItem('bookingState', JSON.stringify(bookingState));
-    // Navegamos cambiando el estado
-    setCurrentStep('passengerData');
+    setCurrentStep('passengerData'); // <--- Navegación correcta en React
   };
   
   // Función para volver a la pantalla anterior
@@ -149,7 +148,7 @@ const App: React.FC = () => {
           passengers={passengers}
           grandTotal={grandTotal}
           onBack={handleGoBack}
-          // El resto de props que necesite PassengerDataForm
+          setPassengers={setPassengers} // <--- Pasamos la función de actualización
         />
       );
     }
@@ -226,7 +225,7 @@ const App: React.FC = () => {
         {renderContent()}
       </main>
       
-      {/* 4. RENDERIZADO CONDICIONAL DEL FOOTER */}
+      {/* El footer solo se muestra en la pantalla de selección de equipaje */}
       {currentStep === 'baggageSelection' && (
         <footer className="sticky bottom-0 bg-white shadow-[0_-4px_12px_rgba(0,0,0,0.05)] p-4">
           <div className="w-full max-w-[1312px] mx-auto flex flex-col md:flex-row md:justify-between md:items-center gap-2 md:gap-0">

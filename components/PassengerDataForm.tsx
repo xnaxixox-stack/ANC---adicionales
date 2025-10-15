@@ -1,10 +1,12 @@
 import React from 'react';
-import { Passenger } from '../types';
+import { Passenger } from '../types'; // Asume que types.ts existe y está importado
 // 1. IMPORTACIÓN: Importamos el cargador de scripts
 import MazeScriptLoader from '../MazeScriptLoader'; 
 
 interface PassengerDataFormProps {
   passengers: Passenger[];
+  // Debemos definir setPassengers para que el formulario pueda actualizar los datos.
+  // La firma de setPassengers debe coincidir con la de useState<Passenger[]>
   setPassengers: React.Dispatch<React.SetStateAction<Passenger[]>>;
   onBack: () => void;
   grandTotal: number;
@@ -37,9 +39,14 @@ const FormSelect: React.FC<React.SelectHTMLAttributes<HTMLSelectElement> & { lab
 export const PassengerDataForm: React.FC<PassengerDataFormProps> = ({ passengers, setPassengers, onBack, grandTotal }) => {
   const handleDataChange = (passengerId: string, field: keyof Passenger, value: string) => {
     setPassengers(prev =>
-      prev.map(p =>
-        p.id === passengerId ? { ...p, [field]: value } : p
-      )
+      prev.map(p => {
+        // Asegúrate de que los campos que se actualizan realmente existan en el tipo Passenger.
+        // Aquí asumimos que field es una clave válida de Passenger.
+        if (p.id === passengerId) {
+            return { ...p, [field]: value };
+        }
+        return p;
+      })
     );
   };
 
@@ -49,6 +56,8 @@ export const PassengerDataForm: React.FC<PassengerDataFormProps> = ({ passengers
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Datos de pasajeros confirmados. Procediendo al pago.');
+    // Aquí podrías añadir la lógica para avanzar a la pantalla de pago.
+    // e.g., onNextStep('payment');
   };
 
   return (
