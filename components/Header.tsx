@@ -3,7 +3,7 @@ import React from 'react';
 export const Header: React.FC = () => {
   return (
     <header className="bg-white shadow-sm">
-      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-[1312px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
           {/* Left side */}
           <div className="flex items-center space-x-8">

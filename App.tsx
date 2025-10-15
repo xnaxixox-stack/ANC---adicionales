@@ -104,7 +104,7 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800 font-sans">
       <Header />
-      <main className="w-full px-4 md:px-8 py-8">
+      <main className="w-full max-w-[1312px] mx-auto px-4 md:px-8 py-8">
         <a href="#" className="flex items-center text-purple-700 font-semibold mb-6 hover:underline">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
             <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
@@ -166,7 +166,7 @@ const App: React.FC = () => {
       </main>
       
       <footer className="sticky bottom-0 bg-white shadow-[0_-4px_12px_rgba(0,0,0,0.05)] p-4">
-        <div className="w-full max-w-6xl mx-auto flex flex-col md:flex-row md:justify-between md:items-center gap-2 md:gap-0">
+        <div className="w-full max-w-[1312px] mx-auto flex flex-col md:flex-row md:justify-between md:items-center gap-2 md:gap-0">
             <button onClick={() => setIsPurchaseDrawerOpen(true)} className="text-right md:text-left focus:outline-none focus:ring-2 focus:ring-purple-300 rounded-lg p-2 -m-2 transition-shadow" aria-label="Ver detalle de la compra">
                 <span className="text-sm text-gray-600">Precio total</span>
                 <p className="text-2xl font-bold text-gray-900 flex items-center justify-end md:justify-start">{formatCurrency(grandTotal)}
