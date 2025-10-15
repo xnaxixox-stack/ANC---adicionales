@@ -7,9 +7,7 @@ export const Header: React.FC = () => {
         <div className="flex justify-between items-center py-4">
           {/* Left side */}
           <div className="flex items-center space-x-8">
-            <div className="text-3xl font-bold text-purple-600">
-              S<span className="text-cyan-400">KY</span>
-            </div>
+            <img src="https://cdn.buttercms.com/cache=expiry:31506000/WeSY7XAyRiq6Q9NKMGXN" alt="SKY logo" className="h-8 w-auto" />
             <nav className="hidden md:flex items-center space-x-6">
               <a href="#" className="text-gray-600 hover:text-purple-700 font-medium flex items-center">
                 Gestiona tu vuelo

@@ -7,9 +7,16 @@ import { baggageOptions, passengersData } from './constants';
 import { Passenger } from './types';
 import { ToastContainer, ToastData } from './components/ToastContainer';
 import { PassengerDataForm } from './components/PassengerDataForm'; // Importación crucial
+import { FareDetailModal } from './components/FareDetailModal';
 
 // Definimos los posibles pasos de navegación
 type AppStep = 'baggageSelection' | 'passengerData';
+
+const InfoIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+    </svg>
+);
 
 const App: React.FC = () => {
   
@@ -21,6 +28,7 @@ const App: React.FC = () => {
 
   // Estado inicial basado en la URL hash o 'baggageSelection' por defecto
   const [currentStep, setCurrentStep] = useState<AppStep>(getStepFromHash);
+  const [isFareModalOpen, setIsFareModalOpen] = useState(false);
 
   // useEffect para manejar la sincronización con la URL hash y el estado
   useEffect(() => {
@@ -193,25 +201,34 @@ const App: React.FC = () => {
             Tu tarifa [Light] solo incluye 1 bolso de mano ✈️
           </h1>
           <p className="text-lg text-gray-600 mt-2">Agrega equipaje adicional si lo necesitas.</p>
+          <button 
+            onClick={() => setIsFareModalOpen(true)}
+            className="flex items-center gap-2 text-purple-700 font-semibold hover:underline mt-3 focus:outline-none focus:ring-2 focus:ring-purple-200 rounded-lg p-1 -m-1"
+            aria-label="Ver detalles de la tarifa"
+          >
+            <InfoIcon />
+            ¿Qué incluye mi tarifa?
+          </button>
         </div>
 
         <div className="space-y-8">
             {/* Included Item */}
-            <div className="bg-white p-6 rounded-2xl border border-purple-200 flex flex-col md:flex-row items-center gap-6 shadow-sm">
-              <img src="https://i.imgur.com/injLeEc.png" alt="Hand bags" className="w-40 h-40 object-contain"/>
-              <div className="flex-1 text-center md:text-left">
-                <div className="flex items-center justify-center md:justify-start gap-3 mb-2">
-                  <h2 className="text-xl font-bold">Bolso de mano</h2>
-                  <span className="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full">✓ INCLUIDO</span>
+            <div className="bg-white p-4 rounded-xl border border-gray-200 flex items-center gap-3 shadow-sm">
+              <img src="https://i.imgur.com/injLeEc.png" alt="Hand bags" className="w-12 h-12 md:w-16 md:h-16 object-contain flex-shrink-0"/>
+              <div className="flex-1">
+                <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mb-1">
+                  <h2 className="text-base font-bold text-gray-900">Bolso de mano</h2>
+                  <span className="bg-green-100 text-green-700 text-xs font-bold px-2 py-0.5 rounded-full">✓ INCLUIDO</span>
                 </div>
-                <p className="text-gray-600 mb-2">Todas nuestras tarifas incluyen <span className="font-bold">un bolso</span> de mano sin costo <span className="font-bold">por pasajero</span> en cada vuelo.</p>
-                <p className="text-gray-700 font-semibold">Tienes en tu reserva: <span className="text-purple-700">1 Ida | 1 Vuelta</span></p>
-                <button 
-                  onClick={() => setActiveBaggageDetail('hand-bag')}
-                  className="mt-4 w-full md:w-auto text-purple-700 font-semibold py-2 px-4 border border-purple-300 rounded-lg hover:bg-purple-50 transition-colors">
-                  Detalle bolso de mano
-                </button>
+                <p className="text-sm text-gray-600">
+                  Total: <span className="font-semibold text-purple-700">{passengers.length} Ida | {passengers.length} Vuelta</span> (1 por pasajero).
+                </p>
               </div>
+              <button 
+                onClick={() => setActiveBaggageDetail('hand-bag')}
+                className="ml-auto flex-shrink-0 text-sm text-purple-700 font-semibold py-2 px-3 border border-purple-200 rounded-lg hover:bg-purple-50 transition-colors whitespace-nowrap">
+                Ver detalle
+              </button>
             </div>
             
             {/* All baggage options */}
@@ -266,7 +283,7 @@ const App: React.FC = () => {
                 onClick={handleContinue}
                 className="w-full md:w-auto bg-purple-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-purple-700 transition-colors text-lg"
               >
-                  Continuar y completar datos
+                  {baggageTotal > 0 ? 'Continuar y completar datos' : 'Continuar sin agregar equipaje'}
               </button>
           </div>
         </footer>
@@ -279,6 +296,8 @@ const App: React.FC = () => {
         baggageOptions={baggageOptions}
         grandTotal={grandTotal}
       />
+
+      <FareDetailModal isOpen={isFareModalOpen} onClose={() => setIsFareModalOpen(false)} />
 
       <ToastContainer toasts={toasts} onDismiss={removeToast} />
 

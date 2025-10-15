@@ -65,10 +65,8 @@ export const PurchaseDetailDrawer: React.FC<PurchaseDetailDrawerProps> = ({ isOp
   const formatCurrency = (value: number) => `CLP ${value.toLocaleString('es-CL')}`;
 
   const adicionales = [
-      { adult: 1, seat: "23F (EZE-LIM)" },
-      { adult: 1, seat: "4A (LIM-CUZ)" },
-      { adult: 2, seat: "10B (EZE-LIM)" },
-      { adult: 2, seat: "11F (LIM-CUZ)" },
+      { adult: 1, seat: "23F (SCL-AEP)" },
+      { adult: 2, seat: "10B (SCL-AEP)" },
   ];
 
   const { idaBaggageItems, idaBaggageCost } = useMemo(() => {
@@ -128,140 +126,141 @@ export const PurchaseDetailDrawer: React.FC<PurchaseDetailDrawerProps> = ({ isOp
   const subtotalVuelta = baseSubtotalVuelta + vueltaBaggageCost;
 
   return (
-    <div
-      className={`fixed inset-0 z-50 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="drawer-title"
-    >
-      <div className="absolute inset-0 bg-black bg-opacity-40" onClick={onClose} aria-hidden="true"></div>
-      
-      <div className={`fixed top-0 right-0 h-full w-full max-w-lg bg-white shadow-xl flex flex-col transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-        <header className="flex items-center gap-4 p-6 border-b border-gray-200 flex-shrink-0">
-          <ShoppingCartIcon />
-          <h2 id="drawer-title" className="text-2xl font-bold text-gray-800">Detalle de la compra</h2>
-        </header>
+    <>
+      <div
+        className={`fixed inset-0 z-50 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="drawer-title"
+      >
+        <div className="absolute inset-0 bg-black bg-opacity-40" onClick={onClose} aria-hidden="true"></div>
+        
+        <div className={`fixed top-0 right-0 h-full w-full max-w-lg bg-white shadow-xl flex flex-col transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+          <header className="flex items-center gap-4 p-6 border-b border-gray-200 flex-shrink-0">
+            <ShoppingCartIcon />
+            <h2 id="drawer-title" className="text-2xl font-bold text-gray-800">Detalle de la compra</h2>
+          </header>
 
-        <div className="flex-1 overflow-y-auto bg-gray-100 p-4 space-y-4">
-          
-          {/* IDA Section */}
-          <div className="bg-white rounded-lg">
-            <button onClick={() => setIdaOpen(!idaOpen)} className="w-full flex justify-between items-start text-left p-4 focus:outline-none focus:ring-2 focus:ring-purple-300 rounded-lg">
-              <div>
-                <p className="text-xs text-purple-600 font-bold mb-1">IDA</p>
-                <h3 className="text-lg font-bold flex items-center gap-2">
-                  Miami (MIA) <GreenArrowIcon /> Santiago de Chile (SCL)
-                </h3>
-              </div>
-              <ChevronIcon open={idaOpen} />
-            </button>
-            {idaOpen && (
-              <div className="px-4 pb-4 space-y-4">
-                <div className="text-sm text-gray-600 space-y-2 pt-2">
-                  <p className="flex items-center gap-2"><CalendarIcon /> Viernes, 16 de Febrero | 01:00 - 03:00</p>
-                  <a href="#" className="flex items-center gap-2 text-purple-700 font-semibold hover:underline"><InfoIcon /> Ver itinerario del vuelo</a>
+          <div className="flex-1 overflow-y-auto bg-gray-100 p-4 space-y-4">
+            
+            {/* IDA Section */}
+            <div className="bg-white rounded-lg">
+              <button onClick={() => setIdaOpen(!idaOpen)} className="w-full flex justify-between items-start text-left p-4 focus:outline-none focus:ring-2 focus:ring-purple-300 rounded-lg">
+                <div>
+                  <p className="text-xs text-purple-600 font-bold mb-1">IDA</p>
+                  <h3 className="text-lg font-bold flex items-center gap-2">
+                    Santiago (SCL) <GreenArrowIcon /> Buenos Aires (AEP)
+                  </h3>
                 </div>
-                <div className="pt-4 border-t border-gray-100">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <p className="font-bold">Pasaje aéreo - Tarifa Plus</p>
-                      <p className="text-sm text-gray-500">2 Adultos</p>
-                      <a href="#" className="flex items-center gap-2 text-sm text-purple-700 font-semibold hover:underline mt-1"><InfoIcon /> ¿Que incluye mi tarifa?</a>
+                <ChevronIcon open={idaOpen} />
+              </button>
+              {idaOpen && (
+                <div className="px-4 pb-4 space-y-4">
+                  <div className="text-sm text-gray-600 space-y-2 pt-2">
+                    <p className="flex items-center gap-2"><CalendarIcon /> Viernes, 16 de Febrero | 01:00 - 03:00</p>
+                    <a href="#" className="flex items-center gap-2 text-purple-700 font-semibold hover:underline"><InfoIcon /> Ver itinerario del vuelo</a>
+                  </div>
+                  <div className="pt-4 border-t border-gray-100">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <p className="font-bold">Pasaje aéreo - Tarifa Light</p>
+                        <p className="text-sm text-gray-500">2 Adultos</p>
+                      </div>
+                      <p className="font-bold">{formatCurrency(42770)}</p>
                     </div>
-                    <p className="font-bold">{formatCurrency(42770)}</p>
                   </div>
-                </div>
-                <div className="pt-4 border-t border-gray-100">
-                  <p className="font-bold mb-2">Adicionales</p>
-                  <div className="space-y-1">
-                    {adicionales.map((item, index) => (
-                        <DetailRow key={`seat-ida-${index}`} label={`Adulto ${item.adult} - Asiento ${item.seat}`} value="Incluído en tarifa" />
-                    ))}
-                    {idaBaggageItems.map((item, index) => (
-                      <DetailRow key={`bag-ida-${index}`} label={`${item.passengerName} - ${item.itemName}`} value={item.value} />
-                    ))}
-                  </div>
-                </div>
-                <div className="border-t border-gray-200 pt-3 mt-4 flex justify-between items-center font-bold">
-                  <p>Subtotal</p>
-                  <p>{formatCurrency(subtotalIda)}</p>
-                </div>
-              </div>
-            )}
-          </div>
-          
-          {/* VUELTA Section */}
-          <div className="bg-white rounded-lg">
-            <button onClick={() => setVueltaOpen(!vueltaOpen)} className="w-full flex justify-between items-start text-left p-4 focus:outline-none focus:ring-2 focus:ring-purple-300 rounded-lg">
-              <div>
-                <p className="text-xs text-purple-600 font-bold mb-1">VUELTA</p>
-                <h3 className="text-lg font-bold flex items-center gap-2">
-                  Santiago de Chile (SCL) <GreenArrowIcon /> Miami (MIA)
-                </h3>
-              </div>
-              <ChevronIcon open={vueltaOpen} />
-            </button>
-            {vueltaOpen && (
-              <div className="px-4 pb-4 space-y-4">
-                <div className="text-sm text-gray-600 space-y-2 pt-2">
-                  <p className="flex items-center gap-2"><CalendarIcon /> Sábado, 24 de Febrero | 08:00 - 10:20</p>
-                  <a href="#" className="flex items-center gap-2 text-purple-700 font-semibold hover:underline"><InfoIcon /> Ver itinerario del vuelo</a>
-                </div>
-                <div className="pt-4 border-t border-gray-100">
-                   <div className="flex justify-between items-start">
-                    <div>
-                      <p className="font-bold">Pasaje aéreo - Tarifa Plus</p>
-                      <p className="text-sm text-gray-500">2 Adultos</p>
+                  <div className="pt-4 border-t border-gray-100">
+                    <p className="font-bold mb-2">Adicionales</p>
+                    <div className="space-y-1">
+                      {adicionales.map((item, index) => (
+                          <DetailRow key={`seat-ida-${index}`} label={`Adulto ${item.adult} - Asiento ${item.seat}`} value="Incluído en tarifa" />
+                      ))}
+                      {idaBaggageItems.map((item, index) => (
+                        <DetailRow key={`bag-ida-${index}`} label={`${item.passengerName} - ${item.itemName}`} value={item.value} />
+                      ))}
                     </div>
-                    <p className="font-bold">{formatCurrency(42770)}</p>
+                  </div>
+                  <div className="border-t border-gray-200 pt-3 mt-4 flex justify-between items-center font-bold">
+                    <p>Subtotal</p>
+                    <p>{formatCurrency(subtotalIda)}</p>
                   </div>
                 </div>
-                <div className="pt-4 border-t border-gray-100">
-                  <p className="font-bold mb-2">Adicionales</p>
-                   <div className="space-y-1">
-                    {adicionales.map((item, index) => (
-                        <DetailRow key={`seat-vuelta-${index}`} label={`Adulto ${item.adult} - Asiento ${item.seat}`} value="Incluído en tarifa" />
-                    ))}
-                    {vueltaBaggageItems.map((item, index) => (
-                        <DetailRow key={`bag-vuelta-${index}`} label={`${item.passengerName} - ${item.itemName}`} value={item.value} />
-                    ))}
+              )}
+            </div>
+            
+            {/* VUELTA Section */}
+            <div className="bg-white rounded-lg">
+              <button onClick={() => setVueltaOpen(!vueltaOpen)} className="w-full flex justify-between items-start text-left p-4 focus:outline-none focus:ring-2 focus:ring-purple-300 rounded-lg">
+                <div>
+                  <p className="text-xs text-purple-600 font-bold mb-1">VUELTA</p>
+                  <h3 className="text-lg font-bold flex items-center gap-2">
+                    Buenos Aires (AEP) <GreenArrowIcon /> Santiago (SCL)
+                  </h3>
+                </div>
+                <ChevronIcon open={vueltaOpen} />
+              </button>
+              {vueltaOpen && (
+                <div className="px-4 pb-4 space-y-4">
+                  <div className="text-sm text-gray-600 space-y-2 pt-2">
+                    <p className="flex items-center gap-2"><CalendarIcon /> Sábado, 24 de Febrero | 08:00 - 10:20</p>
+                    <a href="#" className="flex items-center gap-2 text-purple-700 font-semibold hover:underline"><InfoIcon /> Ver itinerario del vuelo</a>
+                  </div>
+                  <div className="pt-4 border-t border-gray-100">
+                     <div className="flex justify-between items-start">
+                      <div>
+                        <p className="font-bold">Pasaje aéreo - Tarifa Plus</p>
+                        <p className="text-sm text-gray-500">2 Adultos</p>
+                      </div>
+                      <p className="font-bold">{formatCurrency(42770)}</p>
+                    </div>
+                  </div>
+                  <div className="pt-4 border-t border-gray-100">
+                    <p className="font-bold mb-2">Adicionales</p>
+                     <div className="space-y-1">
+                      {adicionales.map((item, index) => (
+                          <DetailRow key={`seat-vuelta-${index}`} label={`Adulto ${item.adult} - Asiento ${item.seat}`} value="Incluído en tarifa" />
+                      ))}
+                      {vueltaBaggageItems.map((item, index) => (
+                          <DetailRow key={`bag-vuelta-${index}`} label={`${item.passengerName} - ${item.itemName}`} value={item.value} />
+                      ))}
+                    </div>
+                  </div>
+                  <div className="border-t border-gray-200 pt-3 mt-4 flex justify-between items-center font-bold">
+                    <p>Subtotal</p>
+                    <p>{formatCurrency(subtotalVuelta)}</p>
                   </div>
                 </div>
-                <div className="border-t border-gray-200 pt-3 mt-4 flex justify-between items-center font-bold">
-                  <p>Subtotal</p>
-                  <p>{formatCurrency(subtotalVuelta)}</p>
-                </div>
-              </div>
-            )}
+              )}
+            </div>
+
+            {/* Taxes Section */}
+            <div className="bg-white rounded-lg">
+              <button onClick={() => setTaxesOpen(!taxesOpen)} className="w-full flex justify-between items-center text-left p-4 focus:outline-none focus:ring-2 focus:ring-purple-300 rounded-lg">
+                  <h3 className="text-lg font-bold">Tasas e impuestos</h3>
+                  <ChevronIcon open={taxesOpen} />
+              </button>
+              {taxesOpen && (
+                  <div className="px-4 pb-4 border-t border-gray-100">
+                      <div className="pt-3 flex justify-between items-center font-bold">
+                         <p>Subtotal</p>
+                         <p>{formatCurrency(42770)}</p>
+                      </div>
+                  </div>
+              )}
+            </div>
           </div>
 
-          {/* Taxes Section */}
-          <div className="bg-white rounded-lg">
-            <button onClick={() => setTaxesOpen(!taxesOpen)} className="w-full flex justify-between items-center text-left p-4 focus:outline-none focus:ring-2 focus:ring-purple-300 rounded-lg">
-                <h3 className="text-lg font-bold">Tasas e impuestos</h3>
-                <ChevronIcon open={taxesOpen} />
+          <footer className="p-6 bg-white border-t border-gray-200 flex-shrink-0">
+            <div className="flex justify-between items-center mb-4">
+              <p className="text-xl font-bold">Total a pagar:</p>
+              <p className="text-2xl font-bold">{formatCurrency(grandTotal)}</p>
+            </div>
+            <button onClick={onClose} className="w-full bg-purple-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-purple-700 transition-colors text-lg">
+              Entendido
             </button>
-            {taxesOpen && (
-                <div className="px-4 pb-4 border-t border-gray-100">
-                    <div className="pt-3 flex justify-between items-center font-bold">
-                       <p>Subtotal</p>
-                       <p>{formatCurrency(42770)}</p>
-                    </div>
-                </div>
-            )}
-          </div>
+          </footer>
         </div>
-
-        <footer className="p-6 bg-white border-t border-gray-200 flex-shrink-0">
-          <div className="flex justify-between items-center mb-4">
-            <p className="text-xl font-bold">Total a pagar:</p>
-            <p className="text-2xl font-bold">{formatCurrency(grandTotal)}</p>
-          </div>
-          <button onClick={onClose} className="w-full bg-purple-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-purple-700 transition-colors text-lg">
-            Entendido
-          </button>
-        </footer>
       </div>
-    </div>
+    </>
   );
 };
