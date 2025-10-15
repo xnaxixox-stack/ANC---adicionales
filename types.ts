@@ -22,4 +22,10 @@ export interface Passenger {
   baggage: {
     [itemId: string]: BaggageCounts;
   };
+  firstName?: string;
+  lastName?: string;
+  dob?: string;
+  nationality?: string;
+  documentType?: 'DNI' | 'Passport' | '';
+  documentNumber?: string;
 }
