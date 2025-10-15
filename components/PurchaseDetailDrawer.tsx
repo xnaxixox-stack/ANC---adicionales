@@ -208,7 +208,7 @@ export const PurchaseDetailDrawer: React.FC<PurchaseDetailDrawerProps> = ({ isOp
                   <div className="pt-4 border-t border-gray-100">
                      <div className="flex justify-between items-start">
                       <div>
-                        <p className="font-bold">Pasaje aéreo - Tarifa Plus</p>
+                        <p className="font-bold">Pasaje aéreo - Tarifa Light</p>
                         <p className="text-sm text-gray-500">2 Adultos</p>
                       </div>
                       <p className="font-bold">{formatCurrency(42770)}</p>
