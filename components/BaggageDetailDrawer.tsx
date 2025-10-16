@@ -26,6 +26,15 @@ const DimensionsIcon = () => (
   </svg>
 )
 
+const CheckListItem: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <li className="flex items-start gap-3">
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mt-1 text-purple-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+    </svg>
+    <span className="text-gray-700 leading-relaxed">{children}</span>
+  </li>
+);
+
 export const BaggageDetailDrawer: React.FC<BaggageDetailDrawerProps> = ({ isOpen, onClose, baggageItemId }) => {
   useEffect(() => {
     const handleEsc = (event: KeyboardEvent) => {
@@ -85,11 +94,11 @@ export const BaggageDetailDrawer: React.FC<BaggageDetailDrawerProps> = ({ isOpen
                     <h3 className="text-lg font-bold text-gray-800 mb-2">Dimensiones</h3>
                     {details.dimensions.width > 0 ? (
                         <div className="flex items-baseline gap-2">
-                            <p><span className="text-2xl font-bold text-purple-700">{details.dimensions.height}</span><span className="text-sm text-gray-500"> cm</span></p>
-                            <p className="text-lg text-gray-300 font-light">x</p>
                             <p><span className="text-2xl font-bold text-purple-700">{details.dimensions.width}</span><span className="text-sm text-gray-500"> cm</span></p>
                             <p className="text-lg text-gray-300 font-light">x</p>
                             <p><span className="text-2xl font-bold text-purple-700">{details.dimensions.depth}</span><span className="text-sm text-gray-500"> cm</span></p>
+                            <p className="text-lg text-gray-300 font-light">x</p>
+                            <p><span className="text-2xl font-bold text-purple-700">{details.dimensions.height}</span><span className="text-sm text-gray-500"> cm</span></p>
                         </div>
                     ) : (
                         <p className="text-2xl font-bold text-purple-700">{details.dimensions.height} cm</p>
@@ -113,6 +122,18 @@ export const BaggageDetailDrawer: React.FC<BaggageDetailDrawerProps> = ({ isOpen
                 </div>
            </div>
           )}
+
+          {details?.sections && details.sections.map((section, i) => (
+            <div key={i} className={`${i > 0 ? 'pt-6 border-t border-slate-200' : ''}`}>
+              {section.title && <h3 className="text-xl font-bold text-gray-800 mb-4">{section.title}</h3>}
+              {section.preListText && <p className="text-gray-700 mb-4 leading-relaxed">{section.preListText}</p>}
+              <ul className="space-y-4">
+                {section.points.map((point, j) => (
+                  <CheckListItem key={j}>{point}</CheckListItem>
+                ))}
+              </ul>
+            </div>
+          ))}
 
           {details?.extraNotes && details.extraNotes.map((note, i) => (
             <div key={i} className="bg-purple-50 p-4 rounded-lg border border-purple-200 text-purple-800 text-sm">

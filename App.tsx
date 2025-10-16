@@ -198,7 +198,7 @@ const App: React.FC = () => {
 
         <div className="text-left mb-8">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
-            Tu tarifa [Light] solo incluye 1 bolso de mano ✈️
+            Tu tarifa Light solo incluye 1 bolso de mano ✈️
           </h1>
           <p className="text-lg text-gray-600 mt-2">Agrega equipaje adicional si lo necesitas.</p>
           <button 
