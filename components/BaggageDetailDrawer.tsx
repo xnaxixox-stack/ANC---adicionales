@@ -68,7 +68,7 @@ export const BaggageDetailDrawer: React.FC<BaggageDetailDrawerProps> = ({ isOpen
     >
       <div className="absolute inset-0 bg-black bg-opacity-40" onClick={onClose} aria-hidden="true"></div>
       
-      <div className={`fixed top-0 right-0 h-full w-full max-w-md bg-white shadow-xl flex flex-col transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+      <div className={`fixed bottom-0 inset-x-0 w-full rounded-t-2xl max-h-[80vh] h-auto bg-white shadow-xl flex flex-col transform transition-transform duration-300 ease-in-out md:inset-y-0 md:left-auto md:right-0 md:h-full md:max-h-none md:max-w-md md:rounded-t-none md:rounded-l-2xl ${isOpen ? 'translate-y-0' : 'translate-y-full'} md:translate-y-0 ${isOpen ? 'md:translate-x-0' : 'md:translate-x-full'}`}>
         <header className="flex items-center justify-between p-5 border-b border-gray-200 flex-shrink-0">
           <h2 id="drawer-title" className="text-xl font-bold text-gray-800">{details?.title || 'Detalles'}</h2>
           <button
