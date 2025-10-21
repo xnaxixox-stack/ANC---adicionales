@@ -6,8 +6,9 @@ import { BaggageDetailDrawer } from './components/BaggageDetailDrawer';
 import { baggageOptions, passengersData } from './constants';
 import { Passenger } from './types';
 import { ToastContainer, ToastData } from './components/ToastContainer';
-import { PassengerDataForm } from './components/PassengerDataForm'; // Importación crucial
+import { PassengerDataForm } from './components/PassengerDataForm';
 import { FareDetailModal } from './components/FareDetailModal';
+import { Footer } from './components/Footer';
 
 // Definimos los posibles pasos de navegación
 type AppStep = 'baggageSelection' | 'passengerData';
@@ -173,15 +174,26 @@ const App: React.FC = () => {
     window.location.hash = '#baggage-selection';
   };
 
+  const handleSubmitPassengerData = (e: React.FormEvent) => {
+    e.preventDefault();
+    const form = document.getElementById('passenger-form') as HTMLFormElement;
+    if (form && !form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+    console.log('Datos de pasajeros confirmados. Procediendo al pago.', passengers);
+    alert('¡Datos confirmados! El siguiente paso sería el pago.');
+  };
+
   const renderContent = () => {
     if (currentStep === 'passengerData') {
       // Renderizar el formulario de datos de pasajeros
       return (
         <PassengerDataForm
           passengers={passengers}
-          grandTotal={grandTotal}
+          setPassengers={setPassengers}
           onBack={handleGoBack}
-          setPassengers={setPassengers} // <--- Pasamos la función de actualización
+          onSubmit={handleSubmitPassengerData}
         />
       );
     }
@@ -260,20 +272,19 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-800 font-sans">
+    <div className="min-h-screen bg-gray-50 text-gray-800 font-sans flex flex-col">
       <Header />
       
-      <main className="w-full max-w-[1312px] mx-auto px-4 md:px-8 py-8">
+      <main className="w-full max-w-[1312px] mx-auto px-4 md:px-8 py-8 flex-grow">
         {renderContent()}
       </main>
       
-      {/* El footer solo se muestra en la pantalla de selección de equipaje */}
       {currentStep === 'baggageSelection' && (
-        <footer className="sticky bottom-0 bg-white shadow-[0_-4px_12px_rgba(0,0,0,0.05)] p-4">
-          <div className="w-full max-w-[1312px] mx-auto flex flex-col md:flex-row md:justify-between md:items-center gap-2 md:gap-0">
-              <button onClick={() => setIsPurchaseDrawerOpen(true)} className="text-right md:text-left focus:outline-none focus:ring-2 focus:ring-purple-300 rounded-lg p-2 -m-2 transition-shadow" aria-label="Ver detalle de la compra">
+        <footer className="sticky bottom-0 bg-white shadow-[0_-4px_12px_rgba(0,0,0,0.05)] p-4 z-10">
+          <div className="w-full max-w-[1312px] mx-auto flex flex-col lg:flex-row lg:justify-between lg:items-center gap-2 lg:gap-0">
+              <button onClick={() => setIsPurchaseDrawerOpen(true)} className="text-right lg:text-left focus:outline-none focus:ring-2 focus:ring-purple-300 rounded-lg p-2 -m-2 transition-shadow" aria-label="Ver detalle de la compra">
                   <span className="text-sm text-gray-600">Precio total</span>
-                  <p className="text-2xl font-bold text-gray-900 flex items-center justify-end md:justify-start">{formatCurrency(grandTotal)}
+                  <p className="text-2xl font-bold text-gray-900 flex items-center justify-end lg:justify-start">{formatCurrency(grandTotal)}
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2 text-purple-600" viewBox="0 0 20 20" fill="currentColor">
                       <path fillRule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clipRule="evenodd" />
                     </svg>
@@ -281,10 +292,29 @@ const App: React.FC = () => {
               </button>
               <button 
                 onClick={handleContinue}
-                className="w-full md:w-auto bg-purple-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-purple-700 transition-colors text-lg"
+                className="w-full lg:w-auto bg-purple-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-purple-700 transition-colors text-lg"
               >
                   {baggageTotal > 0 ? 'Continuar y completar datos' : 'Continuar sin agregar equipaje'}
               </button>
+          </div>
+        </footer>
+      )}
+      
+      {currentStep === 'passengerData' && (
+        <footer className="sticky bottom-0 bg-white shadow-[0_-4px_12px_rgba(0,0,0,0.05)] p-4 z-10">
+          <div className="w-full max-w-[1312px] mx-auto flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4">
+            <div>
+              <span className="text-sm text-gray-600">Precio total</span>
+              <p className="text-2xl font-bold text-gray-900">{formatCurrency(grandTotal)}</p>
+            </div>
+            <div className="flex flex-col sm:flex-row w-full lg:w-auto items-center gap-3">
+               <button onClick={handleGoBack} type="button" className="w-full sm:w-auto text-gray-700 font-bold py-3 px-8 rounded-lg hover:bg-gray-100 transition-colors border border-gray-300">
+                  Volver
+               </button>
+               <button type="submit" form="passenger-form" className="w-full sm:w-auto bg-purple-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-purple-700 transition-colors text-lg">
+                  Confirmar y Pagar
+               </button>
+            </div>
           </div>
         </footer>
       )}
@@ -306,6 +336,7 @@ const App: React.FC = () => {
         onClose={() => setActiveBaggageDetail(null)}
         baggageItemId={activeBaggageDetail}
       />
+      <Footer />
     </div>
   );
 };

@@ -15,6 +15,12 @@ const ShoppingCartIcon = () => (
     </svg>
 );
 
+const CloseIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+    </svg>
+);
+
 const GreenArrowIcon = () => (
     <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-green-500">
         <path d="M1 5.4C0.723858 5.4 0.5 5.62386 0.5 5.9V6.1C0.5 6.37614 0.723858 6.6 1 6.6V5.4ZM15.5121 6.51213C15.7465 6.27776 15.7465 5.89724 15.5121 5.66286L11.7029 1.85355C11.4685 1.61918 11.088 1.61918 10.8536 1.85355C10.6192 2.08792 10.6192 2.46845 10.8536 2.70282L14.2386 6.08792L10.8536 9.47303C10.6192 9.7074 10.6192 10.0879 10.8536 10.3223C11.088 10.5567 11.4685 10.5567 11.7029 10.3223L15.5121 6.51213ZM1 6.6H15.0879V5.4H1V6.6Z" fill="currentColor"/>
@@ -136,9 +142,18 @@ export const PurchaseDetailDrawer: React.FC<PurchaseDetailDrawerProps> = ({ isOp
         <div className="absolute inset-0 bg-black bg-opacity-40" onClick={onClose} aria-hidden="true"></div>
         
         <div className={`fixed top-0 right-0 h-full w-full max-w-lg bg-white shadow-xl flex flex-col transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-          <header className="flex items-center gap-4 p-6 border-b border-gray-200 flex-shrink-0">
-            <ShoppingCartIcon />
-            <h2 id="drawer-title" className="text-2xl font-bold text-gray-800">Detalle de la compra</h2>
+          <header className="flex items-center justify-between p-6 border-b border-gray-200 flex-shrink-0">
+            <div className="flex items-center gap-4">
+              <ShoppingCartIcon />
+              <h2 id="drawer-title" className="text-2xl font-bold text-gray-800">Detalle de la compra</h2>
+            </div>
+            <button
+              onClick={onClose}
+              className="text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-300 rounded-full p-1"
+              aria-label="Cerrar"
+            >
+              <CloseIcon />
+            </button>
           </header>
 
           <div className="flex-1 overflow-y-auto bg-gray-100 p-4 space-y-4">
