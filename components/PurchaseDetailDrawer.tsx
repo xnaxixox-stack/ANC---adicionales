@@ -141,7 +141,7 @@ export const PurchaseDetailDrawer: React.FC<PurchaseDetailDrawerProps> = ({ isOp
       >
         <div className="absolute inset-0 bg-black bg-opacity-40" onClick={onClose} aria-hidden="true"></div>
         
-        <div className={`fixed bottom-0 inset-x-0 w-full rounded-t-2xl max-h-[80vh] h-auto bg-white shadow-xl flex flex-col transform transition-transform duration-300 ease-in-out md:inset-y-0 md:left-auto md:right-0 md:h-full md:max-h-none md:max-w-lg md:rounded-t-none md:rounded-l-2xl ${isOpen ? 'translate-y-0' : 'translate-y-full'} md:translate-y-0 ${isOpen ? 'md:translate-x-0' : 'md:translate-x-full'}`}>
+        <div className={`fixed bottom-0 inset-x-0 md:top-0 md:right-0 md:left-auto md:h-full w-full max-h-[80vh] md:max-h-full md:max-w-lg bg-white shadow-xl flex flex-col rounded-t-xl md:rounded-none transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-y-0 md:translate-x-0' : 'translate-y-full md:translate-y-0 md:translate-x-full'}`}>
           <header className="flex items-center justify-between p-6 border-b border-gray-200 flex-shrink-0">
             <div className="flex items-center gap-4">
               <ShoppingCartIcon />

@@ -56,14 +56,14 @@ export const FareDetailModal: React.FC<FareDetailModalProps> = ({ isOpen, onClos
 
   return (
     <div 
-        className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black bg-opacity-50 animate-fade-in"
+        className="fixed inset-0 z-[60] flex items-end justify-center md:items-center p-0 md:p-4 bg-black bg-opacity-50 animate-fade-in"
         onClick={onClose}
         role="dialog"
         aria-modal="true"
         aria-labelledby="fare-modal-title"
     >
         <div 
-            className="bg-white rounded-xl shadow-2xl w-full max-w-md m-auto p-6 animate-scale-in"
+            className={`bg-white rounded-t-xl md:rounded-xl shadow-2xl w-full md:max-w-md max-h-[80vh] p-6 transition-all duration-300 ease-out transform ${ isOpen ? 'translate-y-0 md:scale-100' : 'translate-y-full md:translate-y-0 md:scale-95'}`}
             onClick={e => e.stopPropagation()}
         >
             <div className="flex justify-between items-center mb-4">
