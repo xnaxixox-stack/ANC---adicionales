@@ -178,40 +178,79 @@ export const BaggageOptionCard: React.FC<BaggageOptionCardProps> = ({ item, pass
             </div>
             
             <div className="space-y-3">
-              {passengers.map((passenger) => {
-                const idaCount = passenger.baggage[item.id]?.ida || 0;
-                const vueltaCount = passenger.baggage[item.id]?.vuelta || 0;
-                const limit = BAGGAGE_ITEM_LIMITS[item.id] ?? Infinity;
-                
-                return (
-                  <div key={passenger.id} className="flex flex-wrap justify-between items-center text-sm gap-2">
-                    <p className="font-medium text-gray-700">{passenger.name}</p>
-                    {separateTrips ? (
-                      <div className="flex items-center gap-x-3 sm:gap-x-4">
+              {isSameForAll && item.category !== 'pet' ? (
+                (() => {
+                  const firstPassenger = passengers[0];
+                  if (!firstPassenger) return null;
+                  const idaCount = firstPassenger.baggage[item.id]?.ida || 0;
+                  const vueltaCount = firstPassenger.baggage[item.id]?.vuelta || 0;
+                  const limit = BAGGAGE_ITEM_LIMITS[item.id] ?? Infinity;
+
+                  return (
+                    <div className="flex flex-wrap justify-between items-center text-sm gap-2">
+                      <p className="font-medium text-gray-700">Todos los pasajeros</p>
+                      {separateTrips ? (
+                        <div className="flex items-center gap-x-3 sm:gap-x-4">
+                          <div className="flex items-center gap-2">
+                            <span className="text-gray-500 w-8 text-right">Ida</span>
+                            <QuantityControlButton onClick={() => onQuantityChange(item.id, firstPassenger.id, 'ida', -1)} disabled={idaCount === 0}>-</QuantityControlButton>
+                            <span className="font-bold w-4 text-center" aria-live="polite">{idaCount}</span>
+                            <QuantityControlButton onClick={() => onQuantityChange(item.id, firstPassenger.id, 'ida', 1)} disabled={idaCount >= limit}>+</QuantityControlButton>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-gray-500 w-8 text-right">Vuelta</span>
+                            <QuantityControlButton onClick={() => onQuantityChange(item.id, firstPassenger.id, 'vuelta', -1)} disabled={vueltaCount === 0}>-</QuantityControlButton>
+                            <span className="font-bold w-4 text-center" aria-live="polite">{vueltaCount}</span>
+                            <QuantityControlButton onClick={() => onQuantityChange(item.id, firstPassenger.id, 'vuelta', 1)} disabled={vueltaCount >= limit}>+</QuantityControlButton>
+                          </div>
+                        </div>
+                      ) : (
                         <div className="flex items-center gap-2">
-                          <span className="text-gray-500 w-8 text-right">Ida</span>
+                          <span className="text-gray-500">Ida y Vuelta</span>
+                          <QuantityControlButton onClick={() => onQuantityChange(item.id, firstPassenger.id, 'ida', -1)} disabled={idaCount === 0}>-</QuantityControlButton>
+                          <span className="text-xl font-bold w-6 text-center" aria-live="polite">{idaCount}</span>
+                          <QuantityControlButton onClick={() => onQuantityChange(item.id, firstPassenger.id, 'ida', 1)} disabled={idaCount >= limit}>+</QuantityControlButton>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })()
+              ) : (
+                passengers.map((passenger) => {
+                  const idaCount = passenger.baggage[item.id]?.ida || 0;
+                  const vueltaCount = passenger.baggage[item.id]?.vuelta || 0;
+                  const limit = BAGGAGE_ITEM_LIMITS[item.id] ?? Infinity;
+                  
+                  return (
+                    <div key={passenger.id} className="flex flex-wrap justify-between items-center text-sm gap-2">
+                      <p className="font-medium text-gray-700">{passenger.name}</p>
+                      {separateTrips ? (
+                        <div className="flex items-center gap-x-3 sm:gap-x-4">
+                          <div className="flex items-center gap-2">
+                            <span className="text-gray-500 w-8 text-right">Ida</span>
+                            <QuantityControlButton onClick={() => onQuantityChange(item.id, passenger.id, 'ida', -1)} disabled={idaCount === 0}>-</QuantityControlButton>
+                            <span className="font-bold w-4 text-center" aria-live="polite">{idaCount}</span>
+                            <QuantityControlButton onClick={() => onQuantityChange(item.id, passenger.id, 'ida', 1)} disabled={idaCount >= limit}>+</QuantityControlButton>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-gray-500 w-8 text-right">Vuelta</span>
+                            <QuantityControlButton onClick={() => onQuantityChange(item.id, passenger.id, 'vuelta', -1)} disabled={vueltaCount === 0}>-</QuantityControlButton>
+                            <span className="font-bold w-4 text-center" aria-live="polite">{vueltaCount}</span>
+                            <QuantityControlButton onClick={() => onQuantityChange(item.id, passenger.id, 'vuelta', 1)} disabled={vueltaCount >= limit}>+</QuantityControlButton>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          <span className="text-gray-500">Ida y Vuelta</span>
                           <QuantityControlButton onClick={() => onQuantityChange(item.id, passenger.id, 'ida', -1)} disabled={idaCount === 0}>-</QuantityControlButton>
-                          <span className="font-bold w-4 text-center" aria-live="polite">{idaCount}</span>
+                          <span className="text-xl font-bold w-6 text-center" aria-live="polite">{idaCount}</span>
                           <QuantityControlButton onClick={() => onQuantityChange(item.id, passenger.id, 'ida', 1)} disabled={idaCount >= limit}>+</QuantityControlButton>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-gray-500 w-8 text-right">Vuelta</span>
-                          <QuantityControlButton onClick={() => onQuantityChange(item.id, passenger.id, 'vuelta', -1)} disabled={vueltaCount === 0}>-</QuantityControlButton>
-                          <span className="font-bold w-4 text-center" aria-live="polite">{vueltaCount}</span>
-                          <QuantityControlButton onClick={() => onQuantityChange(item.id, passenger.id, 'vuelta', 1)} disabled={vueltaCount >= limit}>+</QuantityControlButton>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="flex items-center gap-2">
-                        <span className="text-gray-500">Ida y Vuelta</span>
-                        <QuantityControlButton onClick={() => onQuantityChange(item.id, passenger.id, 'ida', -1)} disabled={idaCount === 0}>-</QuantityControlButton>
-                        <span className="text-xl font-bold w-6 text-center" aria-live="polite">{idaCount}</span>
-                        <QuantityControlButton onClick={() => onQuantityChange(item.id, passenger.id, 'ida', 1)} disabled={idaCount >= limit}>+</QuantityControlButton>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
+                      )}
+                    </div>
+                  );
+                })
+              )}
             </div>
 
             <div className="flex items-center justify-between gap-3 pt-4 border-t border-gray-200 mt-2">

@@ -104,7 +104,7 @@ interface BaggageDetail {
 
 export const baggageDetailsContent: { [key: string]: BaggageDetail } = {
   'hand-bag': {
-    title: 'Bolso de mano',
+    title: 'Artículo personal',
     description: [
       'Está incluido de forma gratuita en todas las tarifas. Puede ser una mochila, cartera, maletín o cualquier artículo personal que cumpla con las dimensiones permitidas.',
       'Cualquier elemento extra será cobrado como equipaje adicional.',

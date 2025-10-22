@@ -210,7 +210,7 @@ const App: React.FC = () => {
 
         <div className="text-left mb-8">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
-            Tu tarifa Light solo incluye 1 bolso de mano ✈️
+            Tu tarifa Light solo incluye 1 artículo personal ✈️
           </h1>
           <p className="text-lg text-gray-600 mt-2">Agrega equipaje adicional si lo necesitas.</p>
           <button 
@@ -229,7 +229,7 @@ const App: React.FC = () => {
               <img src="https://i.imgur.com/injLeEc.png" alt="Hand bags" className="w-16 h-16 md:w-24 md:h-24 object-contain flex-shrink-0"/>
               <div className="flex-1">
                 <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mb-1">
-                  <h2 className="text-base font-bold text-gray-900">Bolso de mano</h2>
+                  <h2 className="text-base font-bold text-gray-900">Artículo personal</h2>
                   <span className="bg-green-100 text-green-700 text-xs font-bold px-2 py-0.5 rounded-full">✓ INCLUIDO</span>
                 </div>
                 <p className="text-sm text-gray-600">
